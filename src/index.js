@@ -1,6 +1,10 @@
 import fetch from 'node-fetch';
 import express from 'express';
 import {Server} from 'socket.io';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -57,7 +61,7 @@ async function premio(monto){
 }
 
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('port', process.env.PORT || 3000);
 
