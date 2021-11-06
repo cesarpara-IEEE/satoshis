@@ -43,7 +43,7 @@ async function premio(monto){
                 "min_withdrawable": monto, 
                 "max_withdrawable": monto,
                 "uses":1, 
-                "wait_time": 1,
+                "wait_time": 1, 
                 "is_unique": true}
 
   let response = await fetch(url, 
