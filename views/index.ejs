@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <link rel="stylesheet" href="main.css" type="text/css"> -->
+	<title>Document</title>
+</head>
+<body>
+	<h1>Games LN</h1>
+
+	<div id="loguen" style="display: block;">
+		<label>Ingrese un nombre: </label>
+		<input id="usuario" type="text">
+		<div><button id="ingreso">Ingresar</button></div>
+	</div>
+
+	<div id="loby" style="display: none;">
+		<h2>Loby</h2>
+		<div id="presentes"></div>
+	</div>
+
+	<div id="generarSaldo" style="display: none;">
+		<button id="gen">Generar</button>
+		<label id="direccion"></label>
+		<div id="qrcode"></div>
+	</div>
+
+	<div id="juego" class="juego" style="display: none">
+		<h2>Monopolio</h2>
+		<canvas id="mono" width="400" height="400" style="border: 1px solid #000000;;"> </canvas>
+	</div>
+
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+	<!-- <script src="./main.js"></script> -->
+</body>
+</html>
