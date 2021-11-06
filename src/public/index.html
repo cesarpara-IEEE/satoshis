@@ -4,8 +4,9 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="./favicon.png" />
 	<link rel="stylesheet" href="./main.css" type="text/css">
-	<title>Document</title>
+	<title>Monopolio</title>
 </head>
 <body>
 	<h1>Games LN</h1>
@@ -21,15 +22,17 @@
 		<div id="presentes"></div>
 	</div>
 
-	<div id="generarSaldo" class="saldo" style="display: none;">
-		<button id="gen">Generar</button>
-		<label id="direccion"></label>
+	<div id="saldo" class="saldo">
+		<div id="generarSaldo" style="display: none;">
+			<button id="gen">Generar</button>
+			<label id="direccion"></label>
+		</div>
 		<div id="qrcode"></div>
 	</div>
 
 	<div id="juego" class="juego" style="display: none">
 		<h2>Monopolio</h2>
-		<canvas id="mono" width="400" height="400" style="border: 1px solid #000000;;"> </canvas>
+		<canvas id="mono" width="700" height="400" style="border: 1px solid #000000;;"> </canvas>
         <button id="correr">Corra!!!!</button>
 	</div>
 

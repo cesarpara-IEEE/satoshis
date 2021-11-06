@@ -19,12 +19,30 @@ async function bal() {
 }
 
 async function factura(){
-  const url2 = 'https://legend.lnbits.com/api/v1/payments'
+  const url = 'https://legend.lnbits.com/api/v1/payments'
   const body = {"out": false, "amount": 20, "memo": "Rasec"}
-  let response = await fetch(url2, 
+  let response = await fetch(url, 
                             { method: 'POST',
                               body: JSON.stringify(body),
                               headers: {'X-Api-Key'   : "3ade9cd3cbc74a1db618a9be1fab8a51", 
+                                        'Content-Type': 'application/json'}
+                            })
+  let data = await response.json();                    
+  return data;
+}
+
+
+async function facturaLN(){
+  const url = 'https://legend.lnbits.com/lnurlp/api/v1/links'
+  const body = {"description": Jugar,
+                "amount": 20,
+                //"max": 20,
+                //"min": 20,
+                "comment_chars": 0}
+  let response = await fetch(url, 
+                            { method: 'POST',
+                              body: JSON.stringify(body),
+                              headers: {'X-Api-Key'   : "25d22e160dac4687b099cf8f503bc69d", 
                                         'Content-Type': 'application/json'}
                             })
   let data = await response.json();                    
@@ -113,7 +131,7 @@ io.on('connection', socket => {
     let c = await pagado()
   });
 
-  socket.on('corriendo', (data) => {
+  socket.on('corriendo', data => {
     if (data.pos > 50) {
       io.emit('termino', data.nombre);
     }else {
@@ -127,7 +145,7 @@ io.on('connection', socket => {
     // console.log("Generar QR premio")
     let valor = await premio(20*num_p);
     num_p = 0;
-    // console.log(valor)
+    console.log(valor);
     socket.emit('premioQR', valor)
   });
 

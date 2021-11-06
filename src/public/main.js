@@ -6,6 +6,7 @@ var ingreso = document.getElementById('ingreso');
 var loguen = document.getElementById('loguen');
 var loby = document.getElementById('loby');
 var generarSaldo = document.getElementById('generarSaldo');
+var saldo_qr = document.getElementById('saldo');
 var juego = document.getElementById('juego');
 var mono = document.getElementById('mono');
 var correr = document.getElementById('correr');
@@ -56,6 +57,7 @@ ingreso.addEventListener('click', ()=>{
 });
 
 gen.addEventListener('click', () => {
+    generarSaldo.style.display = 'none';
     socket.emit('generarQR', 'Generando QR para pagar');
 });
 
@@ -65,10 +67,11 @@ socket.on("gen_factura", data => {
     new QRCode(document.getElementById("qrcode"), data.payment_request);
 });
 
+
 socket.on("pagado", data => {
     // senial.textContent = "Pago realizado" 
     //loby.style.display = 'none' 
-    generarSaldo.style.display = 'none'
+    saldo_qr.style.display = 'none'
     juego.style.display = 'block'
 });
 
@@ -111,7 +114,10 @@ socket.on('corriendo', (data) => {
     for (let index = 0; index < usuarios.length; index++) {
         var user = usuarios[index];
         ctx.fillText(user, 10, 50*(index+1));
-        ctx.fillText(String(Math.round(mapa.get(user))), 80, 50*(index+1));      
+        ctx.fillText(String(Math.round(mapa.get(user))), 80, 50*(index+1));  
+        ctx.beginPath();
+        ctx.arc((100+10*Math.round(mapa.get(user))),50*(index+1),20,0,2*Math.PI);
+        ctx.stroke();    
     }
 
 });
