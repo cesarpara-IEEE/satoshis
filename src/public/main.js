@@ -19,31 +19,31 @@ var qrganador = document.getElementById('qrganador');
 
 var presentes = document.getElementById('presentes');
 
-var usuarios = [];
+//let usuarios;
 
 socket.on('nuevo_usuario', (data) => {
-    usuarios = data;
+    //usuarios = new Map(data);
     while(presentes.firstChild){
         presentes.removeChild(presentes.firstChild)
     }
 
     for(let per of data){
         const p = document.createElement('p');
-        const t = document.createTextNode(per);
+        const t = document.createTextNode(per[0]);
         p.appendChild(t);
         presentes.appendChild(p);
     }
 });
 
 socket.on('usuario_desconectado', (data) => {
-    usuarios = data;
+    //usuarios = new Map(data);
     while(presentes.firstChild){
         presentes.removeChild(presentes.firstChild)
     }
 
     for(let per of data){
         const p = document.createElement('p')
-        const t = document.createTextNode(per)
+        const t = document.createTextNode(per[0])
         p.appendChild(t);
         presentes.appendChild(p)
     }
@@ -68,22 +68,6 @@ socket.on("gen_factura", data => {
 });
 
 
-socket.on("pagado", data => {
-    // senial.textContent = "Pago realizado" 
-    //loby.style.display = 'none' 
-    saldo_qr.style.display = 'none'
-    juego.style.display = 'block'
-});
-
-
-socket.on('termino', data => {
-    juego.style.display = 'none'
-    if(data == usuario.value){
-        ganaste.style.display = 'block'
-    }else{
-        perdiste.style.display = 'block'
-    }
-});
 
 premio.addEventListener('click', () => {
     socket.emit('premioQR', "");
@@ -102,24 +86,55 @@ ctx.font = "20px Arial";
 let pos=0;
 correr.addEventListener('click', () => {
     pos += 2*Math.random();
+    socket.emit('corriendo', pos);
+});
 
-    socket.emit('corriendo', {"pos": pos, "nombre": usuario.value});
+
+socket.on("pagado", data => {
+    // senial.textContent = "Pago realizado" 
+    //loby.style.display = 'none' 
+
+    let usuarios = new Map(data)
+    if (usuarios.get(usuario.value).pago){
+        saldo_qr.style.display = 'none'
+        juego.style.display = 'block'
+
+        for (let index = 0; index < data.length; index++) {
+            // var user = usuarios[index];
+            let user = data[index];
+            ctx.fillText(user[0], 10, 50*(index+1));
+            ctx.fillText(String(Math.round(user[1].pos)), 80, 50*(index+1));  
+            ctx.beginPath();
+            ctx.arc((100+10*Math.round(user[1].pos)),50*(index+1),20,0,2*Math.PI);
+            ctx.stroke();    
+        }
+    }
 });
 
 socket.on('corriendo', (data) => {
-    let mapa = new Map(data)
-    console.log(mapa)
-
+    // let mapa = new Map(data);
+    // console.log(mapa);
     ctx.clearRect(0, 0, mono.width, mono.height);
-    for (let index = 0; index < usuarios.length; index++) {
-        var user = usuarios[index];
-        ctx.fillText(user, 10, 50*(index+1));
-        ctx.fillText(String(Math.round(mapa.get(user))), 80, 50*(index+1));  
+
+    for (let index = 0; index < data.length; index++) {
+        // var user = usuarios[index];
+        let user = data[index];
+        ctx.fillText(user[0], 10, 50*(index+1));
+        ctx.fillText(String(Math.round(user[1].pos)), 80, 50*(index+1));  
         ctx.beginPath();
-        ctx.arc((100+10*Math.round(mapa.get(user))),50*(index+1),20,0,2*Math.PI);
+        ctx.arc((100+10*Math.round(user[1].pos)),50*(index+1),20,0,2*Math.PI);
         ctx.stroke();    
     }
+});
 
+socket.on('termino', data => {
+    juego.style.display = 'none'
+    ctx.clearRect(0, 0, mono.width, mono.height);
+    if(data == usuario.value){
+        ganaste.style.display = 'block'
+    }else{
+        perdiste.style.display = 'block'
+    }
 });
 
 

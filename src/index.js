@@ -94,8 +94,8 @@ const server = app.listen(app.get('port'), () => {
 
 const io = new Server(server);
 
-const usuarios = new Set();
-let corredores = new Map();
+const usuarios = new Map();
+//let corredores = new Map();
 let num_p = 0;
 
 io.on('connection', socket => {
@@ -103,7 +103,7 @@ io.on('connection', socket => {
 
   socket.on('nuevo_usuario', (data) => {
     socket.usuarioID = data;
-    usuarios.add(data);
+    usuarios.set(data, {'pago': false, 'pos': 0});
     io.emit('nuevo_usuario', [...usuarios]);
   });
 
@@ -122,7 +122,8 @@ io.on('connection', socket => {
     async function pagado(){
       let condition = await check_pay(valor.payment_hash);
       if (condition.paid) {
-        socket.emit('pagado', 'cancelado');
+        usuarios.set(socket.usuarioID, {'pago': true, 'pos': 0})
+        socket.emit('pagado', [...usuarios]);
         num_p += 1;
         return 0;
       }
@@ -131,12 +132,20 @@ io.on('connection', socket => {
     let c = await pagado()
   });
 
-  socket.on('corriendo', data => {
-    if (data.pos > 50) {
-      io.emit('termino', data.nombre);
+  // **********************************//
+  /* socket.on('generarQR', data => {
+    socket.emit('gen_factura', "De prueba");
+    usuarios.set(socket.usuarioID, {'pago': true, 'pos': 0})
+    io.emit('pagado', [...usuarios]);
+  }); */
+  //***********************************//
+
+  socket.on('corriendo', pos => {
+    if (pos > 50) {
+      io.emit('termino', socket.usuarioID);
     }else {
-      corredores.set(data.nombre, data.pos);
-      io.emit('corriendo', [...corredores]);
+      usuarios.set(socket.usuarioID, {'pago': true, 'pos': pos});
+      io.emit('corriendo', [...usuarios]);
     }
   });
 
@@ -149,6 +158,12 @@ io.on('connection', socket => {
     socket.emit('premioQR', valor)
   });
 
+  //*****************************************//
+  /* socket.on('premioQR', data => {
+    num_p = 0;
+    socket.emit('premioQR', "Prueva: Ganaste")
+  }); */
+  //****************************************//
 });
 
 
